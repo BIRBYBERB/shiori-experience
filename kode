@@ -1,0 +1,106 @@
+
+class UserService:  
+    def __init__(self):
+
+        self.data = {
+            "namaKelompok1": {
+                "username": "billal",
+                "password": "billalpalingganteng",
+                "role": "mahasiswa"
+            },
+            "namaKelompok2": {
+                "username": "cristian",
+                "password": "545",
+                "role": "dosen"
+            }
+        }
+
+    def check_password(self, username, password):
+    
+        for user_info in self.data.values():  
+            if user_info['username'] == username:
+                if user_info['password'] == password:
+                    return user_info
+                else:
+                    return False
+        return False
+
+    def login(self, username, password):
+        data = self.check_password(username, password)
+        if data:
+            print(f"\nWelcome {data['username']}")
+            print(f"Logged in as: {data['role']}")
+        else:
+            print("\nInvalid Login!\n")
+
+    def register_user(self, username, password, role="mahasiswa"):
+     
+        for user_info in self.data.values():
+            if user_info['username'] == username:
+                print("Username sudah terdaftar. Silakan pilih username lain.")
+                return False
+  
+        self.data[f"namaKelompok{len(self.data) + 1}"] = {
+            "username": username,
+            "password": password,
+            "role": role
+        }
+        print("Registrasi berhasil!")
+        return True
+
+    def info_users(self):
+        if self.data:
+            print("\n=== INFO USER ===")
+            for username, user_info in self.data.items():
+                print(f"Username: {user_info['username']}")
+                print(f"Password: {user_info['password']}")
+                print(f"Role: {user_info['role']}\n")
+        else:
+            print("\nBelum ada pengguna yang terdaftar.")
+
+def show_menu():
+    print("\n=== MENU REGISTER ===")
+    print("1. Register")
+    print("2. Info")
+    print("3. Login")
+    print("4. Exit")
+
+def register(service):
+    print("\n=== REGISTER ===")
+    username = input("Masukkan username: ")
+    
+    for user_info in service.data.values():
+        if user_info['username'] == username:
+            print("Username sudah terdaftar. Silakan pilih username lain.")
+            return
+    
+    password = input("Masukkan password: ")
+    role = input("Masukkan role (mahasiswa/dosen): ")
+    
+    service.register_user(username, password, role)
+
+def login(service):
+    print("\n=== LOGIN ===")
+    username = input("Masukkan username: ")
+    password = input("Masukkan password: ")
+    
+    service.login(username, password)
+
+if __name__ == "__main__":
+    user_service = UserService()
+
+    while True:
+        show_menu()
+        choice = input("Pilih opsi (1/2/3/4): ")
+        
+        if choice == '1':
+            register(user_service)
+        elif choice == '2':
+            user_service.info_users()
+        elif choice == '3':
+            login(user_service)
+        elif choice == '4':
+            print("Keluar dari program.")
+            break
+        else:
+            print("Opsi tidak valid. Silakan coba lagi.")
